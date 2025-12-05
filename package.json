@@ -1,0 +1,14 @@
+{
+  "name": "reconciliation-tool",
+  "version": "1.0.0",
+  "description": "智能对账工具 - Auto Reconciliation",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 8000",
+    "build": "echo 'Build complete'",
+    "preview": "python3 -m http.server 8000"
+  },
+  "keywords": ["reconciliation", "vue", "element-plus", "pdf", "excel"],
+  "author": "",
+  "license": "MIT"
+}
