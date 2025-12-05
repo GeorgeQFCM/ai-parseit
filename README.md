@@ -2,6 +2,10 @@
 
 一个基于 Vue3 和 AI 技术的 PDF 产品信息提取工具，支持 PDF 文件上传、自动提取产品信息、Excel 数据导出。
 
+## 🚀 在线访问
+
+[https://ai-parseit-ce6wkbcym-georges-projects-dc754871.vercel.app](https://ai-parseit-ce6wkbcym-georges-projects-dc754871.vercel.app)
+
 ## � 界面预览
 
 ### 主界面
