@@ -1,14 +1,22 @@
 {
-  "name": "pdf-product-info-extractor",
+  "name": "ai-parseit",
   "version": "1.0.0",
-  "description": "AI解析PDF产品信息工具 - PDF Product Info Extractor",
+  "description": "AI解析PDF产品信息工具 - AI ParseIt",
   "main": "index.html",
   "scripts": {
     "dev": "python3 -m http.server 8000",
     "build": "echo 'Build complete'",
     "preview": "python3 -m http.server 8000"
   },
-  "keywords": ["pdf", "ai", "product-info", "extractor", "vue", "element-plus", "excel"],
+  "keywords": [
+    "pdf",
+    "ai",
+    "product-info",
+    "extractor",
+    "vue",
+    "element-plus",
+    "excel"
+  ],
   "author": "",
   "license": "MIT"
 }

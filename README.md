@@ -8,17 +8,17 @@
 
 ![主界面](image/image1.png)
 
-### PDF 预览
+### PDF 解析结果
 
-![PDF预览](image/image2.png)
+![PDF解析结果](image/image2.png)
 
 ### AI 配置
 
 ![AI配置](image/image3.png)
 
-### 提取结果
+### 导出界面
 
-![提取结果](image/image4.png)
+![导出界面](image/image4.png)
 
 ### 数据导出
 
