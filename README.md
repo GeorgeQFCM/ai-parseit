@@ -1,186 +1,296 @@
-# AI 解析 PDF 产品信息工具 - AI ParseIt
+# AI 智能 PDF 数据提取工具 - AI ParseIt v2.0
 
-一个基于 Vue3 和 AI 技术的 PDF 产品信息提取工具，支持 PDF 文件上传、自动提取产品信息、Excel 数据导出。
+一个基于 Vue3 和 AI 技术的通用 PDF 数据提取平台，支持自定义字段配置、智能提示词生成、多格式导出，适用于合同、发票、产品目录、财务报表等各类 PDF 文档。
 
 ## 🚀 在线访问
 
 [https://ai-parseit-ce6wkbcym-georges-projects-dc754871.vercel.app](https://ai-parseit-ce6wkbcym-georges-projects-dc754871.vercel.app)
 
-## � 界面预览
+## 📸 界面预览
 
 ### 主界面
 
 ![主界面](image/image1.png)
 
-### PDF 解析结果
+### 提取结果
 
-![PDF解析结果](image/image2.png)
+![字段配置](image/image2.png)
 
-### AI 配置
+### AI 配置与动态提示词
 
 ![AI配置](image/image3.png)
 
-### 导出界面
+### 字段配置
 
-![导出界面](image/image4.png)
+![数据提取结果](image/image4.png)
 
-### 数据导出
+### 导出功能
 
-![数据导出](image/image5.png)
+![导出功能](image/image5.png)
 
-## �📋 功能特性
+## ✨ 核心特性
 
-### 📄 PDF 文件管理
+### 🎯 动态字段配置
 
-- 支持 PDF 文件批量上传
-- PDF 文件预览功能
-- 提取结果可视化展示
+- **5 种字段类型**：文本、数字、日期、选择、布尔
+- **字段属性配置**：必填、描述、单位、精度、选项等
+- **字段管理**：添加、删除、排序、编辑
+- **预设模板**：合同订单、发票账单、产品目录、财务报表
 
-### 🤖 AI 智能提取
+### 🤖 智能 AI 提取
 
-- 集成大模型 API，自动从 PDF 中提取产品信息
-- 支持自定义 AI 提示词和参数配置
-- 批量提取功能，提高工作效率
+- **动态提示词生成**：根据字段配置自动生成 AI 提示词
+- **双模式支持**：自动生成（推荐）+ 自定义提示词
+- **实时预览**：查看动态生成的提示词内容
+- **多模型支持**：OpenAI、Claude、通义千问等
 
-### 📊 Excel 数据处理
+### 📄 通用 PDF 处理
 
-- 支持 Excel 文件导出
+- **全类型支持**：不再局限于合同，支持所有 PDF 类型
+- **智能识别**：自动检测文档类型（合同、发票、目录、报表）
+- **批量处理**：支持多文件同时上传和批量提取
+- **文件管理**：预览、删除、状态跟踪
 
-### ✅ 信息匹配
+### 📊 动态数据展示
 
-- 自动匹配 PDF 提取信息
-- 手动匹配调整功能
+- **智能表格**：根据字段配置动态生成表格列
+- **类型格式化**：不同字段类型的专业显示格式
+- **数据操作**：编辑、删除、分页、统计
+- **实时更新**：配置变更立即反映在界面
 
-### 📤 数据导出
+### 📤 多格式导出
 
-- 提取数据 Excel 导出
+- **Excel 导出**：完整的.xlsx 格式，支持中文
+- **CSV 导出**：轻量级格式，便于系统集成
+- **动态字段**：根据配置导出对应字段
+- **进度显示**：导出过程可视化
 
 ### 💾 数据持久化
 
-- 本地存储所有数据，无需服务器
-- 支持数据清除和重置
+- **本地存储**：所有配置和数据本地保存
+- **自动保存**：配置变更自动持久化
+- **数据恢复**：页面刷新后数据不丢失
+- **一键清除**：支持重置所有数据
 
-## 🛠️ 技术栈
+## 🛠️ 技术架构
 
-- **前端框架**: Vue 3
-- **UI 组件库**: Element Plus
-- **Excel 处理**: SheetJS
-- **PDF 处理**: PDF.js
-- **样式框架**: Tailwind CSS
-- **图标库**: Element Plus Icons
+### 前端技术栈
+
+- **Vue 3** - 组合式 API，响应式框架
+- **Element Plus** - 企业级 UI 组件库
+- **Tailwind CSS** - 实用优先的 CSS 框架
+- **Vite** - 现代化构建工具
+- **PDF.js** - PDF 文档解析
+- **SheetJS** - Excel 文件处理
+
+### 组件架构
+
+```
+src/
+├── App.vue                    # 主应用组件
+├── components/
+│   ├── FieldConfigManager.vue # 字段配置管理
+│   ├── PDFUpload.vue         # PDF上传处理
+│   ├── AIConfig.vue          # AI配置管理
+│   ├── DynamicTable.vue      # 动态数据表格
+│   ├── DynamicEditDialog.vue # 动态编辑对话框
+│   ├── Export.vue            # 数据导出
+│   └── PDFPreviewDialog.vue  # PDF预览对话框
+└── main.js                   # 应用入口
+```
 
 ## 🚀 快速开始
 
 ### 环境要求
 
-无需特殊环境，现代浏览器即可运行：
+- Node.js 16+
+- 现代浏览器（Chrome、Firefox、Safari、Edge）
 
-- Chrome (推荐)
-- Firefox
-- Safari
-- Edge
+### 本地开发
 
-### 本地运行
-
-1. 克隆项目
+1. **克隆项目**
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/GeorgeQFCM/ai-parseit.git
 cd ai-parseit
 ```
 
-2. 启动本地服务器
+2. **安装依赖**
 
 ```bash
-# 使用Python 3
-python3 -m http.server 8000
-
-# 或使用Node.js
-npx http-server -p 8000
+npm install
+# 或
+pnpm install
 ```
 
-3. 访问应用
-   打开浏览器访问 `http://localhost:8000`
+3. **启动开发服务器**
 
-### 在线部署
+```bash
+npm run dev
+# 或
+pnpm dev
+```
 
-项目已配置 Vercel 部署支持，可直接部署：
+4. **访问应用**
+   打开浏览器访问 `http://localhost:3001`
 
-1. Fork 本项目到您的 GitHub 账户
-2. 访问 [Vercel](https://vercel.com/)
-3. 导入您的 GitHub 仓库
-4. 点击"Deploy"按钮
+### 生产构建
+
+```bash
+npm run build
+# 或
+pnpm build
+```
 
 ## 📖 使用指南
 
-### 1. 上传 PDF 文件
+### 1. 配置提取字段
 
-- 点击"PDF 上传"标签
-- 拖放或点击上传 PDF 文件
-- 上传完成后可在列表中查看
+1. 点击"字段配置"标签
+2. 选择预设模板或自定义字段：
+   - **合同订单**：订单编号、产品名称、数量、单价等
+   - **发票账单**：发票号码、开票日期、金额、税率等
+   - **产品目录**：产品编码、名称、价格、库存等
+   - **财务报表**：报告期间、项目名称、金额等
+3. 自定义字段属性：类型、必填、描述、单位等
+4. 调整字段顺序，删除不需要的字段
 
 ### 2. 配置 AI 连接
 
-- 点击"AI 配置"标签
-- 填写 API 地址、密钥和模型名称
-- 点击"测试连接"验证配置
-- 保存配置
+1. 点击"AI 配置"标签
+2. 填写 API 信息：
+   - **API 地址**：如 `https://api.openai.com/v1/chat/completions`
+   - **API 密钥**：您的 API 密钥
+   - **模型名称**：如 `gpt-4o`、`claude-3-sonnet`
+3. 选择提示词模式：
+   - **自动生成**：根据字段配置智能生成（推荐）
+   - **自定义**：完全自定义提示词内容
+4. 查看动态生成的提示词预览
+5. 测试连接并保存配置
 
-### 3. 提取 PDF 数据
+### 3. 上传和提取 PDF
 
-- 返回"PDF 上传"标签
-- 点击"提取数据"按钮开始提取
-- 或使用"批量提取"处理所有 PDF 文件
+1. 点击"PDF 上传"标签
+2. 上传 PDF 文件：
+   - 拖拽文件到上传区域
+   - 或点击"选择文件"按钮
+   - 支持多文件上传，单文件最大 20MB
+3. 系统自动检测文档类型
+4. 点击"提取"按钮提取单个文件
+5. 或使用"AI 批量提取"处理所有文件
+6. 查看提取结果和统计信息
 
-### 4. 导出结果
+### 4. 数据管理和导出
 
-- 点击"导出提取数据"导出所有提取的产品信息
+1. 在提取结果表格中查看数据
+2. 点击"编辑"修改数据项
+3. 点击"删除"移除不需要的数据
+4. 切换到"导出"标签
+5. 选择导出格式：
+   - **Excel 文件**：完整的数据表格
+   - **CSV 文件**：轻量级数据格式
+6. 查看导出字段预览和统计信息
 
-## ⚙️ AI 配置说明
+## ⚙️ AI 配置详解
 
-### 支持的模型
+### 支持的 AI 模型
 
-- OpenAI (gpt-4o, gpt-4, gpt-3.5-turbo)
-- Anthropic (claude-3-sonnet, claude-3-opus)
-- 阿里云通义千问 (qwen-max, qwen-plus)
-- 百度文心一言
-- 字节跳动豆包
+| 提供商    | 模型名称                       | 推荐用途     |
+| --------- | ------------------------------ | ------------ |
+| OpenAI    | gpt-4o, gpt-4-turbo            | 高精度提取   |
+| Anthropic | claude-3-sonnet, claude-3-opus | 复杂文档分析 |
+| 阿里云    | qwen-max, qwen-plus            | 中文文档处理 |
+| 百度      | ernie-4.0, ernie-3.5           | 本土化支持   |
+| 字节跳动  | doubao-pro                     | 高性价比     |
 
-### 配置参数
+### 提示词生成机制
 
-- **API 地址**: 模型 API 的完整 URL
-- **API 密钥**: 访问 API 的密钥
-- **模型名称**: 使用的具体模型名称
-- **提示词**: 自定义 AI 提取规则
-- **请求超时**: API 请求超时时间（秒）
-- **重试次数**: 请求失败后的重试次数
+系统会根据您配置的字段自动生成专业的 AI 提示词，包含：
 
-## 📁 项目结构
+- **字段定义**：每个字段的名称、类型、描述
+- **数据格式**：JSON 数组格式要求
+- **类型处理**：数字、日期、布尔值的格式化规则
+- **示例输出**：基于字段配置的示例数据
+- **注意事项**：提取规则和异常处理
+
+### 配置参数说明
+
+- **请求超时**：API 请求的最大等待时间（10-300 秒）
+- **重试次数**：请求失败后的重试次数（0-5 次）
+- **提示词模式**：自动生成或自定义模式
+
+## 🎯 应用场景
+
+### 合同管理
+
+- 提取合同编号、甲乙方信息、产品清单
+- 统计合同金额、数量、交付时间
+- 生成合同台账和分析报表
+
+### 财务处理
+
+- 批量处理发票、收据、报销单
+- 提取金额、税率、开票信息
+- 自动生成财务汇总表
+
+### 产品管理
+
+- 处理产品目录、价格表、库存清单
+- 提取产品信息、规格、价格
+- 建立产品数据库
+
+### 报表分析
+
+- 处理财务报表、统计报告
+- 提取关键数据指标
+- 生成数据分析文件
+
+## 🔧 开发指南
+
+### 项目结构
 
 ```
-├── index.html          # 主页面
-├── package.json        # 项目配置
-├── vercel.json         # Vercel部署配置
-└── README.md           # 项目文档
+ai-parseit/
+├── public/                 # 静态资源
+├── src/
+│   ├── components/         # Vue组件
+│   ├── style.css          # 全局样式
+│   └── main.js            # 应用入口
+├── package.json           # 项目配置
+├── vite.config.js         # Vite配置
+├── tailwind.config.js     # Tailwind配置
+└── README.md              # 项目文档
 ```
-
-## 🔧 开发说明
-
-### 依赖管理
-
-项目使用 CDN 引入所有依赖，无需安装：
-
-- Vue 3
-- Element Plus
-- SheetJS
-- PDF.js
-- Tailwind CSS
 
 ### 自定义开发
 
-1. 修改 `index.html` 中的 Vue 组件逻辑
-2. 调整样式或添加新功能
-3. 使用本地服务器测试
+1. **添加新字段类型**
+
+   - 在 `FieldConfigManager.vue` 中添加字段类型选项
+   - 在 `DynamicTable.vue` 中添加显示逻辑
+   - 在 `DynamicEditDialog.vue` 中添加编辑组件
+
+2. **扩展预设模板**
+
+   - 在 `FieldConfigManager.vue` 的 `templates` 中添加新模板
+   - 定义模板的字段配置和图标
+
+3. **自定义导出格式**
+   - 在 `Export.vue` 中添加新的导出方法
+   - 实现对应的数据格式化逻辑
+
+### 构建和部署
+
+```bash
+# 开发环境
+npm run dev
+
+# 生产构建
+npm run build
+
+# 预览构建结果
+npm run preview
+```
 
 ## 📄 许可证
 
@@ -188,30 +298,53 @@ npx http-server -p 8000
 
 ## 🤝 贡献
 
-欢迎提交 Issue 和 Pull Request 来帮助改进项目！
+欢迎提交 Issue 和 Pull Request！
 
 ### 贡献指南
 
 1. Fork 本项目
-2. 创建您的特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交您的更改 (`git commit -m 'Add some AmazingFeature'`)
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 打开一个 Pull Request
+5. 创建 Pull Request
 
-## 📞 联系方式
+## 📞 支持
 
-如有问题或建议，请通过以下方式联系：
-
-- GitHub Issues: [项目 Issues 页面](https://github.com/yourusername/reconciliation-/issues)
+- **GitHub Issues**: [提交问题](https://github.com/GeorgeQFCM/ai-parseit/issues)
+- **项目主页**: [GitHub Repository](https://github.com/GeorgeQFCM/ai-parseit)
 
 ## 🙏 致谢
 
+感谢以下开源项目的支持：
+
 - [Vue.js](https://vuejs.org/) - 渐进式 JavaScript 框架
-- [Element Plus](https://element-plus.org/) - 企业级 UI 组件库
-- [SheetJS](https://sheetjs.com/) - Excel 文件处理库
-- [PDF.js](https://mozilla.github.io/pdf.js/) - PDF 文档处理库
+- [Element Plus](https://element-plus.org/) - Vue 3 组件库
+- [Vite](https://vitejs.dev/) - 下一代前端构建工具
 - [Tailwind CSS](https://tailwindcss.com/) - 实用优先的 CSS 框架
+- [PDF.js](https://mozilla.github.io/pdf.js/) - PDF 处理库
+- [SheetJS](https://sheetjs.com/) - Excel 处理库
+
+## 🔄 更新日志
+
+### v2.0.0 (2024-12-13)
+
+- 🎯 **重大更新**：从合同专用工具升级为通用 PDF 数据提取平台
+- ✨ **新增功能**：
+  - 动态字段配置系统
+  - 智能提示词生成
+  - 4 个预设模板（合同、发票、目录、报表）
+  - 动态数据表格和编辑
+  - 多格式导出（Excel、CSV）
+- 🔧 **技术升级**：
+  - 重构为 Vue 3 + Vite 架构
+  - 组件化设计，更好的可维护性
+  - 响应式布局，支持移动端
+
+### v1.0.0
+
+- 基础 PDF 合同信息提取功能
+- AI 配置和数据导出
 
 ---
 
-**Enjoy using AI ParseIt! 🎉**
+**让 AI 为您的 PDF 数据提取工作赋能！🚀**

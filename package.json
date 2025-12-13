@@ -1,12 +1,12 @@
 {
   "name": "ai-parseit",
   "version": "1.0.0",
+  "type": "module",
   "description": "AI解析PDF产品信息工具 - AI ParseIt",
-  "main": "index.html",
   "scripts": {
-    "dev": "python3 -m http.server 8000",
-    "build": "echo 'Build complete'",
-    "preview": "python3 -m http.server 8000"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "keywords": [
     "pdf",
@@ -18,5 +18,19 @@
     "excel"
   ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "vue": "^3.4.21",
+    "element-plus": "^2.5.6",
+    "@element-plus/icons-vue": "^2.3.1",
+    "xlsx": "^0.18.5",
+    "pdfjs-dist": "^3.11.174"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "vite": "^5.1.4",
+    "tailwindcss": "^3.4.1",
+    "postcss": "^8.4.35",
+    "autoprefixer": "^10.4.17"
+  }
 }
