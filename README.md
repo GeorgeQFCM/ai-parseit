@@ -4,7 +4,7 @@
 
 ## 🚀 在线访问
 
-[https://ai-parseit-ce6wkbcym-georges-projects-dc754871.vercel.app](https://ai-parseit-ce6wkbcym-georges-projects-dc754871.vercel.app)
+[https://ai-parseit.vercel.app/](https://ai-parseit.vercel.app/)
 
 ## 📸 界面预览
 
