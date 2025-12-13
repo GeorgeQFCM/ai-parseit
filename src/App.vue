@@ -62,7 +62,10 @@
           <div v-else-if="activeTab === 2">
             <h2 class="section-title">字段配置</h2>
             <div class="config-card">
-              <FieldConfigManager v-model="fieldConfig" />
+              <FieldConfigManager
+                v-model="fieldConfig"
+                v-model:globalExtractionRules="globalExtractionRules"
+              />
             </div>
           </div>
           <Export
@@ -123,6 +126,7 @@ const editDialogTitle = ref("编辑数据");
 
 // Field Config
 const fieldConfig = ref([]);
+const globalExtractionRules = ref("");
 
 // AI Config
 const aiConfig = reactive({
@@ -244,6 +248,7 @@ const clearAllData = () => {
     .then(() => {
       pdfFiles.value = [];
       fieldConfig.value = [];
+      globalExtractionRules.value = "";
       localStorage.removeItem("pdfParseData");
       localStorage.removeItem("fieldConfig");
       ElMessage.success("所有数据已清除");
@@ -282,7 +287,11 @@ const saveToLocalStorage = () => {
 
 const saveFieldConfig = () => {
   try {
-    localStorage.setItem("fieldConfig", JSON.stringify(fieldConfig.value));
+    const configData = {
+      fields: fieldConfig.value,
+      globalExtractionRules: globalExtractionRules.value,
+    };
+    localStorage.setItem("fieldConfig", JSON.stringify(configData));
   } catch (e) {
     console.error("保存字段配置失败:", e);
   }
@@ -305,7 +314,18 @@ const loadFieldConfig = () => {
     const saved = localStorage.getItem("fieldConfig");
     if (saved) {
       const config = JSON.parse(saved);
-      fieldConfig.value = config || [];
+      // 支持新旧数据格式
+      if (config.fields && Array.isArray(config.fields)) {
+        // 新格式：包含fields和globalExtractionRules
+        fieldConfig.value = config.fields || [];
+        globalExtractionRules.value = config.globalExtractionRules || "";
+      } else if (Array.isArray(config)) {
+        // 旧格式：直接是字段数组
+        fieldConfig.value = config;
+        globalExtractionRules.value = "";
+      } else {
+        loadDefaultFieldConfig();
+      }
     } else {
       // 如果没有保存的配置，加载默认的合同模板
       loadDefaultFieldConfig();
@@ -403,6 +423,7 @@ const loadAiConfig = () => {
 // 监听字段配置变化，自动保存
 import { watch } from "vue";
 watch(fieldConfig, saveFieldConfig, { deep: true });
+watch(globalExtractionRules, saveFieldConfig);
 
 // Lifecycle
 onMounted(() => {
