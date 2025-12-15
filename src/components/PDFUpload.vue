@@ -92,9 +92,15 @@
                 </el-icon>
               </div>
               <div class="flex-1 min-w-0">
-                <p class="font-medium text-gray-800 truncate">
-                  {{ pdf.name }}
-                </p>
+                <el-tooltip
+                  :content="pdf.name"
+                  placement="top"
+                  :disabled="pdf.name.length <= 30"
+                >
+                  <p class="font-medium text-gray-800 truncate">
+                    {{ pdf.name }}
+                  </p>
+                </el-tooltip>
                 <p class="text-xs text-gray-500">
                   {{ formatFileSize(pdf.size) }} • {{ pdf.type || "未分类" }}
                 </p>

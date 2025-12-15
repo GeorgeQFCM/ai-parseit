@@ -13,7 +13,8 @@
         prop="documentName"
         label="文档名称"
         min-width="150"
-        show-overflow-tooltip     
+        max-width="300"
+        show-overflow-tooltip
       />
 
       <!-- 动态字段列 -->
