@@ -68,7 +68,7 @@
           <el-icon :size="16" :color="getFieldTypeColor(field.type)">
             <component :is="getFieldTypeIcon(field.type)" />
           </el-icon>
-          <span class="text-sm font-medium">{{ field.name }}</span>
+          <span class="text-sm font-medium">{{ field.title || field.name }}</span>
           <el-tag v-if="field.required" size="small" type="danger">必填</el-tag>
         </div>
       </div>
@@ -249,21 +249,22 @@ const exportToExcel = (timestamp) => {
     // 然后按字段配置顺序添加字段
     props.fieldConfig.forEach((field) => {
       let value = item[field.id];
+      const fieldName = field.title || field.name;
 
       // 格式化数据
       if (field.type === "number" && value !== null && value !== undefined) {
         value = Number(value);
         if (field.unit) {
-          orderedItem[field.name] = `${value}${field.unit}`;
+          orderedItem[fieldName] = `${value}${field.unit}`;
         } else {
-          orderedItem[field.name] = value;
+          orderedItem[fieldName] = value;
         }
       } else if (field.type === "boolean") {
-        orderedItem[field.name] = value ? "是" : "否";
+        orderedItem[fieldName] = value ? "是" : "否";
       } else if (field.type === "date" && value) {
-        orderedItem[field.name] = value;
+        orderedItem[fieldName] = value;
       } else {
-        orderedItem[field.name] = value || "";
+        orderedItem[fieldName] = value || "";
       }
     });
 
@@ -278,8 +279,9 @@ const exportToExcel = (timestamp) => {
   colWidths.push({ wch: 12 }); // 文档类型
 
   props.fieldConfig.forEach((field) => {
-    let width = Math.max(field.name.length * 2, 10);
-    if (field.type === "text" && field.name.includes("备注")) {
+    const fieldName = field.title || field.name;
+    let width = Math.max(fieldName.length * 2, 10);
+    if (field.type === "text" && fieldName.includes("备注")) {
       width = 30;
     }
     colWidths.push({ wch: width });
@@ -298,7 +300,7 @@ const exportToCSV = (timestamp) => {
   // 准备CSV数据
   const headers = ["文档名称", "文档类型"];
   props.fieldConfig.forEach((field) => {
-    headers.push(field.name);
+    headers.push(field.title || field.name);
   });
 
   const csvData = [headers];

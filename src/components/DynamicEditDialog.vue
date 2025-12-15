@@ -15,7 +15,7 @@
       <el-form-item
         v-for="field in fields"
         :key="field.id"
-        :label="field.name"
+        :label="field.title || field.name"
         :prop="field.id"
         :required="field.required"
       >
@@ -23,7 +23,7 @@
         <el-input
           v-if="field.type === 'text'"
           v-model="formData[field.id]"
-          :placeholder="field.description || `请输入${field.name}`"
+          :placeholder="field.description || `请输入${field.title || field.name}`"
         />
 
         <!-- 数字输入 -->
@@ -44,7 +44,7 @@
           v-else-if="field.type === 'date'"
           v-model="formData[field.id]"
           type="date"
-          :placeholder="field.description || `请选择${field.name}`"
+          :placeholder="field.description || `请选择${field.title || field.name}`"
           format="YYYY-MM-DD"
           value-format="YYYY-MM-DD"
           style="width: 100%"
@@ -54,7 +54,7 @@
         <el-select
           v-else-if="field.type === 'select'"
           v-model="formData[field.id]"
-          :placeholder="field.description || `请选择${field.name}`"
+          :placeholder="field.description || `请选择${field.title || field.name}`"
           style="width: 100%"
           clearable
         >
@@ -80,15 +80,15 @@
           v-model="formData[field.id]"
           :type="getInputType(field)"
           :rows="getTextareaRows(field)"
-          :placeholder="field.description || `请输入${field.name}`"
+          :placeholder="field.description || `请输入${field.title || field.name}`"
         />
 
         <!-- 字段描述 -->
         <div
           v-if="
             field.description &&
-            field.description !== `请输入${field.name}` &&
-            field.description !== `请选择${field.name}`
+            field.description !== `请输入${field.title || field.name}` &&
+            field.description !== `请选择${field.title || field.name}`
           "
           class="text-xs text-gray-500 mt-1"
         >
@@ -162,7 +162,7 @@ const formRules = computed(() => {
         {
           required: true,
           message: `请${field.type === "select" ? "选择" : "输入"}${
-            field.name
+            field.title || field.name
           }`,
           trigger: field.type === "select" ? "change" : "blur",
         },
@@ -175,7 +175,7 @@ const formRules = computed(() => {
 
       rules[field.id].push({
         type: "number",
-        message: `${field.name}必须是数字`,
+        message: `${field.title || field.name}必须是数字`,
         trigger: "blur",
         transform: (value) => {
           if (value === "" || value === null || value === undefined) {
@@ -194,7 +194,7 @@ const formRules = computed(() => {
               value !== "" &&
               Number(value) < field.min
             ) {
-              callback(new Error(`${field.name}不能小于${field.min}`));
+              callback(new Error(`${field.title || field.name}不能小于${field.min}`));
             } else {
               callback();
             }
@@ -212,7 +212,7 @@ const formRules = computed(() => {
               value !== "" &&
               Number(value) > field.max
             ) {
-              callback(new Error(`${field.name}不能大于${field.max}`));
+              callback(new Error(`${field.title || field.name}不能大于${field.max}`));
             } else {
               callback();
             }
@@ -264,10 +264,11 @@ const getDefaultValue = (field) => {
 
 // 获取输入框类型
 const getInputType = (field) => {
+  const displayName = field.title || field.name;
   if (
-    field.name.includes("备注") ||
-    field.name.includes("描述") ||
-    field.name.includes("说明")
+    displayName.includes("备注") ||
+    displayName.includes("描述") ||
+    displayName.includes("说明")
   ) {
     return "textarea";
   }
@@ -276,10 +277,11 @@ const getInputType = (field) => {
 
 // 获取文本域行数
 const getTextareaRows = (field) => {
+  const displayName = field.title || field.name;
   if (
-    field.name.includes("备注") ||
-    field.name.includes("描述") ||
-    field.name.includes("说明")
+    displayName.includes("备注") ||
+    displayName.includes("描述") ||
+    displayName.includes("说明")
   ) {
     return 4;
   }

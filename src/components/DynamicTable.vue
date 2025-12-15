@@ -12,9 +12,8 @@
       <el-table-column
         prop="documentName"
         label="文档名称"
-        width="200"
-        show-overflow-tooltip
-        fixed="left"
+        min-width="150"
+        show-overflow-tooltip     
       />
 
       <!-- 动态字段列 -->
@@ -22,7 +21,7 @@
         v-for="field in fields"
         :key="field.id"
         :prop="field.id"
-        :label="field.name"
+        :label="field.title || field.name"
         :width="getColumnWidth(field)"
         :show-overflow-tooltip="field.type === 'text'"
       >
@@ -165,7 +164,7 @@ const numberStats = computed(() => {
       stats.push({
         field: field.id,
         fieldConfig: field,
-        label: `${field.name}总计`,
+        label: `${field.title || field.name}总计`,
         value: sum,
       });
     }
@@ -186,7 +185,8 @@ const getColumnWidth = (field) => {
     case "select":
       return 100;
     default:
-      return field.name.length > 6 ? 150 : 120;
+      const displayName = field.title || field.name;
+      return displayName.length > 6 ? 150 : 120;
   }
 };
 

@@ -428,7 +428,8 @@ const extractPdfText = async (pdf) => {
 const generatePrompt = (pdfText) => {
   const fieldDescriptions = props.fieldConfig
     .map((field) => {
-      let desc = `- ${field.id}: ${field.name}`;
+      // 使用title作为显示名称
+      let desc = `- ${field.title || field.name}`;
       if (field.type === "number") {
         desc += ` (数字类型${field.unit ? `，单位：${field.unit}` : ""})`;
       } else if (field.type === "date") {
@@ -450,21 +451,23 @@ const generatePrompt = (pdfText) => {
 
   const exampleData = {};
   props.fieldConfig.forEach((field) => {
+    // 使用title作为键名，如果没有title则使用name
+    const keyName = field.title || field.name;
     switch (field.type) {
       case "number":
-        exampleData[field.id] = field.unit === "元" ? 100.0 : 1;
+        exampleData[keyName] = field.unit === "元" ? 100.0 : 1;
         break;
       case "date":
-        exampleData[field.id] = "2024-01-01";
+        exampleData[keyName] = "2024-01-01";
         break;
       case "boolean":
-        exampleData[field.id] = true;
+        exampleData[keyName] = true;
         break;
       case "select":
-        exampleData[field.id] = field.options?.[0] || "选项1";
+        exampleData[keyName] = field.options?.[0] || "选项1";
         break;
       default:
-        exampleData[field.id] = `示例${field.name}`;
+        exampleData[keyName] = `示例${keyName}`;
     }
   });
 
@@ -475,6 +478,7 @@ ${fieldDescriptions}
 
 注意事项：
 - 返回JSON数组，每个元素代表一条记录
+- 使用中文字段名作为JSON的键名
 - 如果有多条记录，请分别提取
 - 如果字段信息不完整或找不到，用null表示
 - 数字类型请确保返回数字格式
@@ -495,6 +499,32 @@ const callAiApi = async (pdfText, retryCount = 0) => {
   const finalPrompt = props.aiConfig.prompt
     ? `${prompt}\n\nPDF内容：\n${pdfText}`
     : prompt;
+
+  // 创建中文字段名（title）到字段ID的映射
+  const mapChineseToFieldId = (data) => {
+    const titleToId = {};
+    const nameToId = {};
+    props.fieldConfig.forEach(field => {
+      // 优先使用title作为映射键
+      if (field.title) {
+        titleToId[field.title] = field.id;
+      }
+      // 同时保留name作为备选
+      if (field.name) {
+        nameToId[field.name] = field.id;
+      }
+    });
+    
+    return data.map(item => {
+      const mappedItem = {};
+      Object.keys(item).forEach(key => {
+        // 优先使用title映射，其次使用name映射，最后保持原键名
+        const fieldId = titleToId[key] || nameToId[key] || key;
+        mappedItem[fieldId] = item[key];
+      });
+      return mappedItem;
+    });
+  };
 
   try {
     const controller = new AbortController();
@@ -530,14 +560,17 @@ const callAiApi = async (pdfText, retryCount = 0) => {
     const jsonMatch = content.match(/\[[\s\S]*\]/);
     if (jsonMatch) {
       const result = JSON.parse(jsonMatch[0]);
-      return Array.isArray(result) ? result : [result];
+      const arrayResult = Array.isArray(result) ? result : [result];
+      // 将中文字段名映射回字段ID
+      return mapChineseToFieldId(arrayResult);
     }
 
     // 如果没有找到数组，尝试解析单个对象
     const objMatch = content.match(/\{[\s\S]*\}/);
     if (objMatch) {
       const result = JSON.parse(objMatch[0]);
-      return [result];
+      // 将中文字段名映射回字段ID
+      return mapChineseToFieldId([result]);
     }
 
     throw new Error("未能解析AI返回的JSON数据");
