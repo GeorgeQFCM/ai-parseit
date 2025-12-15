@@ -213,6 +213,10 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  globalExtractionRules: {
+    type: String,
+    default: "",
+  },
 });
 
 const emit = defineEmits([
@@ -432,71 +436,109 @@ const extractPdfText = async (pdf) => {
 };
 
 const generatePrompt = (pdfText) => {
+  // 构建全局规则部分
+  let globalRulesSection = "";
+  if (
+    props.globalExtractionRules &&
+    props.globalExtractionRules.trim() !== ""
+  ) {
+    globalRulesSection = `
+## 全局数据提取规则（最高优先级）
+${props.globalExtractionRules}
+`;
+  }
+
+  // 构建详细的字段描述
   const fieldDescriptions = props.fieldConfig
-    .map((field) => {
-      // 使用title作为显示名称
-      let desc = `- ${field.title || field.name}`;
+    .map((field, index) => {
+      let desc = `${index + 1}. [${field.title || field.name}]`;
+      
+      // 类型约束
       if (field.type === "number") {
-        desc += ` (数字类型${field.unit ? `，单位：${field.unit}` : ""})`;
+        desc += ` (数字类型`;
+        if (field.unit) desc += `，单位：${field.unit}`;
+        if (field.precision !== undefined) desc += `，保留${field.precision}位小数`;
+        if (field.min !== undefined) desc += `，最小值${field.min}`;
+        if (field.max !== undefined) desc += `，最大值${field.max}`;
+        desc += `)`;
       } else if (field.type === "date") {
         desc += " (日期类型，格式：YYYY-MM-DD)";
       } else if (field.type === "boolean") {
         desc += " (布尔类型，true/false)";
       } else if (field.type === "select" && field.options) {
-        desc += ` (选择类型，可选值：${field.options.join("、")})`;
+        desc += ` (枚举类型，必须从以下选项中选择：${field.options.map(o => `"${o}"`).join(", ")})`;
+      } else {
+        desc += " (文本类型)";
       }
-      if (field.required) {
-        desc += " [必填]";
+
+      // 提取规则
+      if (field.extractionRule) {
+        desc += `\n   - 提取规则: ${field.extractionRule}`;
       }
+      
+      // 描述
       if (field.description) {
-        desc += ` - ${field.description}`;
+        desc += `\n   - 字段说明: ${field.description}`;
       }
+
+      // 必填项
+      if (field.required) {
+        desc += `\n   - [必填项] 如果找不到对应值，请仔细查找上下文，确实没有则返回 null`;
+      } else {
+        desc += `\n   - [选填项] 如果找不到对应值，返回 null`;
+      }
+
       return desc;
     })
-    .join("\n");
+    .join("\n\n");
 
   const exampleData = {};
   props.fieldConfig.forEach((field) => {
-    // 使用title作为键名，如果没有title则使用name
     const keyName = field.title || field.name;
     switch (field.type) {
       case "number":
-        exampleData[keyName] = field.unit === "元" ? 100.0 : 1;
+        exampleData[keyName] = field.unit === "元" ? 1234.56 : 10;
         break;
       case "date":
-        exampleData[keyName] = "2024-01-01";
+        exampleData[keyName] = "2024-05-20";
         break;
       case "boolean":
         exampleData[keyName] = true;
         break;
       case "select":
-        exampleData[keyName] = field.options?.[0] || "选项1";
+        exampleData[keyName] = field.options?.[0] || "选项A";
         break;
       default:
         exampleData[keyName] = `示例${keyName}`;
     }
   });
 
-  return `你是一个专业的PDF数据提取助手。请从以下PDF内容中提取信息，并以JSON数组格式返回。
+  return `你是一个专业的PDF结构化数据提取专家。你的任务是从非结构化的PDF文本中准确提取指定字段的数据。
 
-需要提取的字段：
+${globalRulesSection}
+
+## 待提取字段及要求
+请严格按照以下字段列表进行提取，不要遗漏：
+
 ${fieldDescriptions}
 
-注意事项：
-- 返回JSON数组，每个元素代表一条记录
-- 使用中文字段名作为JSON的键名
-- 如果有多条记录，请分别提取
-- 如果字段信息不完整或找不到，用null表示
-- 数字类型请确保返回数字格式
-- 日期类型请使用YYYY-MM-DD格式
-- 仅返回JSON数组，不要其他说明文字
+## 输出严格要求
+1. **JSON格式**：必须直接返回一个标准的 JSON 数组，不要使用 markdown 代码块标记（如 \`\`\`json），不要包含任何解释性文字。
+2. **数组结构**：即使 PDF 中只有一条记录，也必须返回数组格式 \`[...]\`。
+3. **键名一致性**：JSON 对象的键名必须严格使用上述字段定义中的 [中文标题]，不要使用英文 ID。
+4. **数据类型**：
+   - 数字字段必须是 Number 类型，不要带千分位分隔符，不要带单位符号（如 ￥, $, %）。
+   - 日期字段必须是 String 类型，格式严格为 "YYYY-MM-DD"。
+   - 文本字段去除首尾空格。
+5. **空值处理**：对于未找到的数据，字段值设为 null，不要使用 "未找到"、"N/A" 等字符串。
+6. **多条记录**：如果页面包含多行项目（如订单明细、发票清单），请准确识别每一行并生成多个对象。
 
-示例输出格式：
+## 示例输出
 [
   ${JSON.stringify(exampleData, null, 2)}
 ]
 
-PDF内容：
+## 待处理的 PDF 内容
 ${pdfText}`;
 };
 

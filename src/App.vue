@@ -42,6 +42,7 @@
             :pdf-files="pdfFiles"
             :ai-config="aiConfig"
             :field-config="fieldConfig"
+            :global-extraction-rules="globalExtractionRules"
             @extract-pdf="handleExtractPdf"
             @extract-all="handleExtractAll"
             @remove-pdf="handleRemovePdf"
