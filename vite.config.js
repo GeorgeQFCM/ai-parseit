@@ -30,5 +30,10 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ["element-plus", "xlsx", "pdfjs-dist"],
+    exclude: ["pdfjs-dist/build/pdf.worker.js"],
+  },
+  define: {
+    // 确保PDF.js能够正确识别环境
+    global: "globalThis",
   },
 });
